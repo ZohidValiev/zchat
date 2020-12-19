@@ -3,9 +3,6 @@
 namespace app\modules\chat\domain\models;
 
 use app\modules\chat\domain\exceptions\DomainNotFoundException;
-use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "message".
@@ -135,7 +132,7 @@ class Message extends \yii\db\ActiveRecord
         return true;
     }
 
-    public static function getById($id)
+    public static function getById(int $id)
     {
         $message = static::findOne($id);
 
@@ -158,7 +155,7 @@ class Message extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public static function getAllGreaterThenId($id, $marker, $isCorrect = null)
+    public static function getAllGreaterThenId(int $id, string $marker, bool $isCorrect = null)
     {
         $query = static::find()
             ->with('user')

@@ -3,7 +3,6 @@
 namespace app\modules\chat\domain\models;
 
 use app\modules\chat\domain\exceptions\DomainNotFoundException;
-use Yii;
 
 /**
  * This is the model class for table "incorrect_message".
@@ -79,7 +78,7 @@ class IncorrectMessage extends \yii\db\ActiveRecord
             ]);
     }
 
-    public static function getById($id)
+    public static function getById(int $id)
     {
         $result = static::find()
             ->with('message')

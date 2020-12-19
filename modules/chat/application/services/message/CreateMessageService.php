@@ -15,7 +15,7 @@ use Yii;
 
 final class CreateMessageService implements ICreateMessageService
 {
-    public function execute($content): Message
+    public function execute(string $content): Message
     {
         /**
          * @var $identity User

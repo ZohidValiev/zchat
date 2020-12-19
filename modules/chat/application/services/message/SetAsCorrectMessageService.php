@@ -16,7 +16,7 @@ class SetAsCorrectMessageService implements ISetAsCorrectMessageService
 {
     use TransactionTrait;
 
-    public function execute($id): ?Message
+    public function execute(int $id): ?Message
     {
         return $this->transaction(function() use ($id) {
             $message = Message::getById($id);

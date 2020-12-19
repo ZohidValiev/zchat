@@ -17,5 +17,5 @@ interface ICreateMessageService
      * @param $content string текст сообщения
      * @return Message
      */
-    public function execute($content): Message;
+    public function execute(string $content): Message;
 }

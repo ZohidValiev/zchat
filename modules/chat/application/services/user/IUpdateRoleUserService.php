@@ -15,7 +15,7 @@ use app\modules\chat\domain\models\User;
 interface IUpdateRoleUserService
 {
     /**
-     * @param int $id
+     * @param int $id User ID
      * @param int $role
      * @return User
      */

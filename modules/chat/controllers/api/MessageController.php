@@ -97,14 +97,14 @@ class MessageController extends Controller
         /**
          * @var $identity User
          */
-        $identity  = Yii::$app->user->identity;
-        $isCorrect = null;
+//        $identity  = Yii::$app->user->identity;
+//        $isCorrect = null;
+//
+//        if (!$identity->isAdmin()) {
+//            $isCorrect = true;
+//        }
 
-        if (!$identity->isAdmin()) {
-            $isCorrect = true;
-        }
-
-        return Message::getAllGreaterThenId($id, $identity->marker, $isCorrect);
+        return Message::getAllGreaterThenId($id, $identity->marker);
     }
 
     public function actionLoadIncorrectIds()

@@ -15,8 +15,8 @@ use app\modules\chat\domain\models\Message;
 interface ISetAsIncorrectMessageService
 {
     /**
-     * @param $id int
+     * @param $id int Message ID
      * @return Message|null
      */
-    public function execute($id): ?Message;
+    public function execute(int $id): ?Message;
 }
