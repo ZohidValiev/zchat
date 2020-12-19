@@ -42,14 +42,12 @@ window.userToken = (function($) {
                 return;
             }
 
-            // if (hasToken()) {
-            //     this._initialized = true;
-            //     return;
-            // }
-
             init(user);
 
             this._initialized = true;
+        },
+        isAdmin: function() {
+            return this.getRole() == 3;
         },
         getId: function() {
             return parseInt(getItem('id'));

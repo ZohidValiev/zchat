@@ -53,6 +53,9 @@ $config = [
                 ],
             ],
         ],
+        'formatter' => [
+            'defaultTimeZone' => 'Europe/Moscow',
+        ],
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,

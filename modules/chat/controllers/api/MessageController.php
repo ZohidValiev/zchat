@@ -89,16 +89,7 @@ class MessageController extends Controller
 
     public function actionIndex()
     {
-        /**
-         * @var $identity User
-         */
-        $identity = Yii::$app->user->identity;
-
-        if ($identity->isAdmin()) {
-            return Message::getAll();
-        }
-
-        return Message::getAllByIsCorrect(true);
+        return Message::getAll();
     }
 
     public function actionLoadIncoming($id = 0)

@@ -19,7 +19,7 @@
 
             this._initialized = true;
             this._lastMsgId = undefined;
-            this.$el = $('#chat');
+            this.$el = $el;
             this.$content = this.$el.find('.chat__content');
             this.$msgBox = this.$el.find('.chat__msg-box');
             this.$input = this.$el.find('#chat-msg');
@@ -193,17 +193,17 @@
                         $children.each(function() {
                             var msg = $(this).data('model');
 
-                            if (ids.includes(parseInt(msg.getId()))) {
-                                msg.isCorrect() && msg.setAsIncorrect();
+                            if (ids.includes(msg.getId())) {
+                                msg.isCorrect() && msg.doIncorrect();
                             } else {
-                                !msg.isCorrect() && msg.setAsCorrect();
+                                !msg.isCorrect() && msg.doCorrect();
                             }
                         });
                     } else {
                         $children = chat.$msgBox.children('.incorrect');
                         $children.each(function() {
                             var msg = $(this).data('model');
-                            msg.setAsCorrect();
+                            msg.doCorrect();
                         });
                     }
                 });
@@ -253,36 +253,74 @@
     };
 
     Message.prototype = {
+        doIncorrect: function() {
+            this.data.isCorrect = 0;
+
+            if (userToken.isAdmin()) {
+                this.setAsIncorrect();
+            } else {
+                this.refresh(this.data);
+            }
+
+            return this;
+        },
+        doCorrect: function() {
+            this.data.isCorrect = 1;
+
+            if (userToken.isAdmin()) {
+                this.setAsCorrect();
+            } else {
+                this.refresh(this.data);
+            }
+
+            return this;
+        },
+        hide: function() {
+            this.$el.hide();
+            return this;
+        },
+        show: function() {
+            this.$el.fadeIn(1500);
+            return this;
+        },
         refresh: function(data) {
             this.setData(data);
 
-            if (data.marker) {
-                this.setHtmlContent(data.content);
-            } else {
-                this.setContent(data.content);
-            }
-            this.setTitle(data.username);
-
             if (data.id) {
                 this.setAttrId(data.id);
-            }
-
-            if (data.createdAt) {
-                this.setTime(data.createdAt);
             }
 
             if (this.ownerHasAdminRole()) {
                 this.setAsMarked();
             }
 
-            if (!this.isCorrect()) {
-                this.setAsIncorrect();
+            if (this.isCorrect() || userToken.isAdmin()) {
+                this.setAsCorrect()
+                    .setTitle(data.username);
+
+                if (data.marker) {
+                    this.setHtmlContent(data.content);
+                } else {
+                    this.setContent(data.content);
+                }
+
+                if (data.createdAt) {
+                    this.setTime(data.createdAt);
+                }
+                
+                this.show();
+            } else {
+                this
+                    .setAsIncorrect()
+                    .setTitle('')
+                    .setContent('')
+                    .setTime('')
+                    .hide();
             }
 
             return this;
         },
         animate: function() {
-            var self = this;
             this.$el
                 .css({opacity: 0})
                 .animate({opacity: 1}, 1500);
@@ -291,14 +329,14 @@
             return this.data.isCorrect == 1;
         },
         ownerHasAdminRole: function() {
-            return  this.data.userRole == 3;
+            return this.data.userRole == 3;
         },
         setData: function(data) {
             this.data = data;
             return this;
         },
         getId: function() {
-            return this.data.id;
+            return parseInt(this.data.id);
         },
         setAttrId: function(id) {
             this.$el

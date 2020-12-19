@@ -11,14 +11,11 @@ namespace app\modules\chat\controllers;
 
 use app\modules\chat\application\services\user\ILoginService;
 use app\modules\chat\application\services\user\ILogoutService;
-use app\modules\chat\domain\exceptions\DomainException;
-use app\modules\chat\domain\exceptions\DomainNotFoundException;
 use app\modules\chat\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 class AuthController extends Controller
@@ -59,7 +56,7 @@ class AuthController extends Controller
                 throw new ServerErrorHttpException('Ошибка на сервере');
             }
 
-            return $this->redirect(['default/index']);
+            return $this->redirect(['/chat']);
         }
 
         $form->password = '';
