@@ -2,6 +2,7 @@
 namespace app\modules\chat\forms\api\message;
 
 use yii\base\Model;
+use yii\helpers\Html;
 
 /**
  * Created by PhpStorm.
@@ -17,6 +18,13 @@ class CreateMessageForm extends Model
     {
         return [
             [['content'], 'required'],
+            [
+                ['content'],
+                'filter',
+                'filter' => function($value) {
+                    return Html::encode($value);
+                },
+            ],
             [['content'], 'string', 'max' => 255],
         ];
     }

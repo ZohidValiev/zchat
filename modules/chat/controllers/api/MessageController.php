@@ -19,7 +19,6 @@ use app\modules\chat\forms\api\message\CreateMessageForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\auth\HttpBearerAuth;
-use yii\helpers\Html;
 use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
@@ -97,7 +96,7 @@ class MessageController extends Controller
         /**
          * @var $identity User
          */
-//        $identity  = Yii::$app->user->identity;
+        $identity  = Yii::$app->user->identity;
 //        $isCorrect = null;
 //
 //        if (!$identity->isAdmin()) {
@@ -118,7 +117,7 @@ class MessageController extends Controller
         $response = Yii::$app->response;
 
         $form = new CreateMessageForm();
-        $form->content = Html::encode($request->getBodyParam('content', ''));
+        $form->content = $request->getBodyParam('content', '');
 
         if (!$form->validate()) {
             return $form;
