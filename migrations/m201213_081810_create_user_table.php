@@ -24,14 +24,11 @@ class m201213_081810_create_user_table extends Migration
             'role' => $this->tinyInteger(1)
                 ->unsigned()
                 ->notNull(),
-            'accessToken' => $this->char(32)
-                ->null(),
             'marker' => $this->char(23)
                 ->null(),
         ], 'engine=innodb');
 
         $this->createIndex('ix_username', $table, 'username', true);
-        $this->createIndex('ix_accessToken', $table, 'accessToken');
         $this->createIndex('ix_marker', $table, 'marker');
     }
 

@@ -2,16 +2,39 @@
 
 namespace app\controllers;
 
+use app\services\IAuthService;
+use app\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use yii\web\ServerErrorHttpException;
 
 class SiteController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout'],
+                'rules' => [
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,4 +61,35 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionLogin(IAuthService $authService)
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $request = Yii::$app->request;
+        $form = new LoginForm();
+
+        if ($form->load($request->post()) && $form->validate()) {
+            try {
+                $authService->login($form->getUser());
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ошибка на сервере');
+            }
+
+            return $this->redirect(['/message']);
+        }
+
+        $form->password = '';
+        return $this->render('login', [
+            'model' => $form,
+        ]);
+    }
+
+    public function actionLogout(IAuthService $authService)
+    {
+        $authService->logout();
+
+        return $this->goHome();
+    }
 }

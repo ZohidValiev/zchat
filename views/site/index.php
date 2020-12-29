@@ -13,7 +13,7 @@ $this->title = 'My Yii Application';
 
         <p class="lead"></p>
 
-        <p><?= Html::a('Ч А Т', ['/chat'], ['class' => 'btn btn-lg btn-success']) ?>
+        <p><?= Html::a('Ч А Т', ['/message'], ['class' => 'btn btn-lg btn-success']) ?>
     </div>
 
     <div class="body-content">

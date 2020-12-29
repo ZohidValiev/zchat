@@ -10,29 +10,25 @@ $config = [
     'language' => 'ru',
     'bootstrap' => [
         'log',
-        \app\modules\chat\Bootstrap::class,
+        \app\components\Bootstrap::class,
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
-    ],
-    'modules' => [
-        'chat' => \app\modules\chat\Module::class,
     ],
     'components' => [
         'request' => [
             'baseUrl' => YII_ENV_DEV ? null : '',
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'TSqsu8BrjRUPue7gGjmAiBkH9ZMSTyDr',
-            'enableCsrfValidation' => false,
+            'enableCsrfValidation' => true,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => \app\modules\chat\domain\models\User::class,
+            'identityClass' => \app\domain\models\User::class,
             'enableAutoLogin' => true,
-            'loginUrl' => ['chat/auth/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -61,6 +57,24 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
+                'login' => 'site/login',
+                'logout' => 'site/logout',
+                [
+                    'class' => \yii\web\GroupUrlRule::class,
+                    'prefix' => 'message',
+                    'rules' => [
+                        '<id:[\d]+>/<action:[\w-]+>' => '<action>',
+                        '<action:[\w-]+>/<id:[\d]+>' => '<action>',
+                    ],
+                ],
+                [
+                    'class' => \yii\web\GroupUrlRule::class,
+                    'prefix' => 'user',
+                    'rules' => [
+                        '<id:[\d]+>/<action:[\w-]+>' => '<action>',
+                    ],
+                ],
             ],
         ],
     ],

@@ -2,7 +2,9 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+/* @var $user \yii\web\User */
 
+use app\assets\ChatAsset;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -11,6 +13,14 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+$user = Yii::$app->user;
+if (!$user->isGuest) {
+    ChatAsset::register($this);
+
+    $encoded = json_encode($user->identity->getUserTokenArray());
+    $this->registerJs("window.userToken.init({$encoded})");
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -39,22 +49,22 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Чат', 'url' => ['/chat'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Чат', 'url' => ['/message'], 'visible' => !Yii::$app->user->isGuest],
             [
                 'label' => 'Некоректные сообщения',
-                'url' => ['/chat/incorrect-message'],
+                'url' => ['/message/incorrect'],
                 'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin(),
             ],
             [
                 'label' => 'Пользователи',
-                'url' => ['/chat/user'],
+                'url' => ['/user'],
                 'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin(),
             ],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Вход', 'url' => ['/chat/auth/login']]
+                ['label' => 'Вход', 'url' => ['/site/login']]
             ) : (
                 '<li>'
-                . Html::beginForm(['/chat/auth/logout'], 'post')
+                . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Выход (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout']
